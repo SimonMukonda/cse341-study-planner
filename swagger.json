@@ -1,0 +1,185 @@
+{
+"swagger": "2.0",
+"info": {
+"title": "Study Planner API",
+"description": "API for managing courses and assignments",
+"version": "1.0.0"
+},
+"tags": [{ "name": "Courses" }, { "name": "Assignments" }],
+"consumes": ["application/json"],
+"produces": ["application/json"],
+"paths": {
+"/courses": {
+"get": {
+"tags": ["Courses"],
+"summary": "Get all courses",
+"responses": {
+"200": { "description": "List of courses", "schema": { "type": "array", "items": { "$ref": "#/definitions/Course" } } },
+"500": { "description": "Server error" }
+}
+},
+"post": {
+"tags": ["Courses"],
+"summary": "Create a course",
+"parameters": [{ "in": "body", "name": "body", "required": true, "schema": { "$ref": "#/definitions/CourseInput" } }],
+"responses": {
+"201": { "description": "Course created", "schema": { "$ref": "#/definitions/Course" } },
+"400": { "description": "Validation error" },
+"500": { "description": "Server error" }
+}
+}
+},
+"/courses/{id}": {
+"parameters": [{ "name": "id", "in": "path", "required": true, "type": "string", "description": "Course id" }],
+"get": {
+"tags": ["Courses"],
+"summary": "Get one course",
+"responses": {
+"200": { "description": "The course", "schema": { "$ref": "#/definitions/Course" } },
+"400": { "description": "Invalid id" },
+"404": { "description": "Course not found" },
+"500": { "description": "Server error" }
+}
+},
+"put": {
+"tags": ["Courses"],
+"summary": "Update a course",
+"parameters": [{ "in": "body", "name": "body", "required": true, "schema": { "$ref": "#/definitions/CourseInput" } }],
+"responses": {
+"200": { "description": "Course updated", "schema": { "$ref": "#/definitions/Course" } },
+"400": { "description": "Invalid id or validation error" },
+"404": { "description": "Course not found" },
+"500": { "description": "Server error" }
+}
+},
+"delete": {
+"tags": ["Courses"],
+"summary": "Delete a course",
+"responses": {
+"200": { "description": "Course deleted" },
+"400": { "description": "Invalid id" },
+"404": { "description": "Course not found" },
+"500": { "description": "Server error" }
+}
+}
+},
+"/assignments": {
+"get": {
+"tags": ["Assignments"],
+"summary": "Get all assignments",
+"responses": {
+"200": { "description": "List of assignments", "schema": { "type": "array", "items": { "$ref": "#/definitions/Assignment" } } },
+"500": { "description": "Server error" }
+}
+},
+"post": {
+"tags": ["Assignments"],
+"summary": "Create an assignment (courseId must be an existing course)",
+"parameters": [{ "in": "body", "name": "body", "required": true, "schema": { "$ref": "#/definitions/AssignmentInput" } }],
+"responses": {
+"201": { "description": "Assignment created", "schema": { "$ref": "#/definitions/Assignment" } },
+"400": { "description": "Validation error or invalid courseId" },
+"500": { "description": "Server error" }
+}
+}
+},
+"/assignments/{id}": {
+"parameters": [{ "name": "id", "in": "path", "required": true, "type": "string", "description": "Assignment id" }],
+"get": {
+"tags": ["Assignments"],
+"summary": "Get one assignment",
+"responses": {
+"200": { "description": "The assignment", "schema": { "$ref": "#/definitions/Assignment" } },
+"400": { "description": "Invalid id" },
+"404": { "description": "Assignment not found" },
+"500": { "description": "Server error" }
+}
+},
+"put": {
+"tags": ["Assignments"],
+"summary": "Update an assignment",
+"parameters": [{ "in": "body", "name": "body", "required": true, "schema": { "$ref": "#/definitions/AssignmentInput" } }],
+"responses": {
+"200": { "description": "Assignment updated", "schema": { "$ref": "#/definitions/Assignment" } },
+"400": { "description": "Invalid id, invalid courseId or validation error" },
+"404": { "description": "Assignment not found" },
+"500": { "description": "Server error" }
+}
+},
+"delete": {
+"tags": ["Assignments"],
+"summary": "Delete an assignment",
+"responses": {
+"200": { "description": "Assignment deleted" },
+"400": { "description": "Invalid id" },
+"404": { "description": "Assignment not found" },
+"500": { "description": "Server error" }
+}
+}
+}
+},
+"definitions": {
+"CourseInput": {
+"type": "object",
+"required": ["courseCode", "title", "semester"],
+"properties": {
+"courseCode": { "type": "string", "example": "CSE341" },
+"title": { "type": "string", "example": "Web Services" },
+"instructor": { "type": "string", "example": "Brother Smith" },
+"semester": { "type": "string", "example": "Fall 2026" },
+"credits": { "type": "number", "example": 3 },
+"meetingDays": { "type": "array", "items": { "type": "string" }, "example": ["Mon", "Wed"] },
+"meetingTime": { "type": "string", "example": "10:00 AM" },
+"location": { "type": "string", "example": "Online" }
+}
+},
+"Course": {
+"type": "object",
+"properties": {
+"_id": { "type": "string", "example": "65f1c2a9e4b0a1b2c3d4e5f6" },
+"courseCode": { "type": "string", "example": "CSE341" },
+"title": { "type": "string", "example": "Web Services" },
+"instructor": { "type": "string", "example": "Brother Smith" },
+"semester": { "type": "string", "example": "Fall 2026" },
+"credits": { "type": "number", "example": 3 },
+"meetingDays": { "type": "array", "items": { "type": "string" }, "example": ["Mon", "Wed"] },
+"meetingTime": { "type": "string", "example": "10:00 AM" },
+"location": { "type": "string", "example": "Online" },
+"createdAt": { "type": "string", "example": "2026-10-03T10:00:00.000Z" },
+"updatedAt": { "type": "string", "example": "2026-10-03T10:00:00.000Z" }
+}
+},
+"AssignmentInput": {
+"type": "object",
+"required": ["courseId", "title", "dueDate"],
+"properties": {
+"courseId": { "type": "string", "example": "PASTE A REAL COURSE _id HERE" },
+"title": { "type": "string", "example": "Week 5 Project" },
+"description": { "type": "string", "example": "Build two collections with CRUD" },
+"dueDate": { "type": "string", "example": "2026-10-10" },
+"priority": { "type": "string", "enum": ["low", "medium", "high"], "example": "high" },
+"status": { "type": "string", "enum": ["not started", "in progress", "submitted", "graded"], "example": "in progress" },
+"estimatedHours": { "type": "number", "example": 6 },
+"pointsPossible": { "type": "number", "example": 100 },
+"grade": { "type": "number", "example": 0 }
+}
+},
+"Assignment": {
+"type": "object",
+"properties": {
+"_id": { "type": "string", "example": "65f1c2a9e4b0a1b2c3d4e5f7" },
+"courseId": { "type": "string", "example": "65f1c2a9e4b0a1b2c3d4e5f6" },
+"title": { "type": "string", "example": "Week 5 Project" },
+"description": { "type": "string", "example": "Build two collections with CRUD" },
+"dueDate": { "type": "string", "example": "2026-10-10T00:00:00.000Z" },
+"priority": { "type": "string", "example": "high" },
+"status": { "type": "string", "example": "in progress" },
+"estimatedHours": { "type": "number", "example": 6 },
+"pointsPossible": { "type": "number", "example": 100 },
+"grade": { "type": "number", "example": 0 },
+"createdAt": { "type": "string", "example": "2026-10-03T10:00:00.000Z" },
+"updatedAt": { "type": "string", "example": "2026-10-03T10:00:00.000Z" }
+}
+}
+}
+}

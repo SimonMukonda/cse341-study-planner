@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 require('dotenv').config();
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -12,6 +14,10 @@ app.use(express.json());
 app.get('/', (req, res) => {
     res.send('Study Planner API');
 });
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/courses', require('./routes/courses'));
+app.use('/assignments', require('./routes/assignments'));
 
 mongoose
     .connect(process.env.MONGODB_URI)
