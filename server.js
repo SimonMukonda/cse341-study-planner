@@ -12,18 +12,20 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/', (req, res) => {
-    res.send('Study Planner API');
+res.send('Study Planner API');
 });
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/courses', require('./routes/courses'));
 app.use('/assignments', require('./routes/assignments'));
+app.use('/users', require('./routes/users'));
+app.use('/notes', require('./routes/notes'));
 
 mongoose
-    .connect(process.env.MONGODB_URI)
-    .then(() => {
-        app.listen(port, () => console.log('Server running on port ' + port));
-    })
-    .catch((err) => {
-        console.error('Database connection failed:', err.message);
-    });
+.connect(process.env.MONGODB_URI)
+.then(() => {
+app.listen(port, () => console.log('Server running on port ' + port));
+})
+.catch((err) => {
+console.error('Database connection failed:', err.message);
+});
